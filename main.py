@@ -36,12 +36,16 @@ def main(epoch_count, mb_size, report_seq):
         for n in range(step_count):
             train_x, train_y = data_loader.get_train_data(mb_size, n)
             output, aux_nn = model.forward_neuralnet(train_x)
+
+            # print(f'pred : {output[0]}')
+            # print(f'label : {train_y[0]}')
+
             loss, aux_pp = model.forward_postproc(output, train_y)
             acc = eval_accuracy(output, train_y)
 
             G_loss = 1.0
             G_output = model.backprop_postproc(G_loss, aux_pp)
-            model.backprop_neuralnet(aux_pp, aux_nn)
+            model.backprop_neuralnet(G_output, aux_nn)
 
             losses.append(loss)
             accs.append(acc)
